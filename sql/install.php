@@ -27,6 +27,8 @@ $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'x13specialcategory` (
     `id_x13specialcategory` int(11) NOT NULL AUTO_INCREMENT,
+    `categoryId` int(11) NOT NULL,
+    `status` tinyint(1) NOT NULL DEFAULT \'0\',
     PRIMARY KEY  (`id_x13specialcategory`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 

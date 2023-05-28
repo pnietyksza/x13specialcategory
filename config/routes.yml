@@ -1,0 +1,5 @@
+category_check_controller:
+  path: /x13specialcategory/categorycheckcontroller
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\X13SpecialCategory\Controller\CategoryCheckController::index'
