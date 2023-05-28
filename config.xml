@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>x13specialcategory</name>
+	<displayName><![CDATA[Special Category for logged users]]></displayName>
+	<version><![CDATA[1.0.0]]></version>
+	<description><![CDATA[Module create new feature for category. Logged users able to see special category.]]></description>
+	<author><![CDATA[X13]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>
