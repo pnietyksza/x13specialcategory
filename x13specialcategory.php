@@ -1,32 +1,36 @@
 <?php
+
 /**
-* 2007-2023 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2023 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2023 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2023 PrestaShop SA
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 
 class X13SpecialCategory extends Module
 {
@@ -51,7 +55,7 @@ class X13SpecialCategory extends Module
     {
         Configuration::updateValue('X13SPECIALCATEGORY_LIVE_MODE', false);
 
-        include(dirname(__FILE__).'/sql/install.php');
+        include(dirname(__FILE__) . '/sql/install.php');
 
         return parent::install() &&
             $this->registerHook('actionCategoryGridDefinitionModifier');
@@ -61,13 +65,37 @@ class X13SpecialCategory extends Module
     {
         Configuration::deleteByName('X13SPECIALCATEGORY_LIVE_MODE');
 
-        include(dirname(__FILE__).'/sql/uninstall.php');
+        include(dirname(__FILE__) . '/sql/uninstall.php');
 
         return parent::uninstall();
     }
 
     public function hookActionCategoryGridDefinitionModifier($params)
     {
-        
+        /** @var GridDefinitionInterface $definition */
+        $definition = $params['definition'];
+        $translator = $this->getTranslator();
+
+        $definition
+            ->getColumns()
+            ->addAfter(
+                'position',
+                (new ToggleColumn('is_special_category'))
+                    ->setName($translator->trans('Special category', [], 'Modules.X13SpecialCategory'))
+                    ->setOptions([
+                        'field' => 'is_special_category',
+                        'primary_field' => 'id_category',
+                        'route' => 'your_route_name',
+                        'route_param_name' => 'categoryId',
+                    ])
+            );
+    }
+
+    public function getContent()
+    {
+        $route = SymfonyContainer::getInstance()->get('router')->generate('category_check_controller');
+        dump($route);
+        exit;
+        Tools::redirectAdmin($route);
     }
 }
